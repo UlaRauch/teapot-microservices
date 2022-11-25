@@ -39,8 +39,9 @@ public class BlendsController {
     public ResponseEntity<Boolean> checkIfBlendAvailable(@RequestBody String name) {
         try {
             //TODO: AvailabilityCheck sinnvoller machen! Wär blöd bei verallgemeinerten sorten, deren name in spezialsorten enthalten ist.
-            boolean isAvailable = !blendsRepository.findByNameContaining(name).isEmpty(); //momentan reicht es, wenn irgendein tee so heißt, egal ob mehrere zur Auswahl stehen
-            System.out.println("name: "+ name + ", available: " + isAvailable);
+            boolean isAvailable = blendsRepository.existsBlendByName(name); //momentan reicht es, wenn irgendein tee so heißt, egal ob mehrere zur Auswahl stehen
+            //System.out.println("name: "+ name + ", available: " + isAvailable);
+            //System.out.println(blendsRepository.findAll());
             return new ResponseEntity<>(isAvailable, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface BlendsRepository extends MongoRepository<Blend, String> {
-    List<Blend> findByNameContaining(String name);
+    boolean existsBlendByName(String id);
 }
