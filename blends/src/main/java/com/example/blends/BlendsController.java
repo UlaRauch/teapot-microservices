@@ -37,7 +37,7 @@ public class BlendsController {
     @PostMapping
     public ResponseEntity<Blend> createBlend(Blend blend) {
         try {
-            Blend _bend = blendsRepository.save(new Blend(blend.getName(), blend.getId()));
+            Blend _bend = blendsRepository.save(new Blend(blend.getName(), blend.getId(), blend.getDescription()));
             return new ResponseEntity<>(_bend, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
