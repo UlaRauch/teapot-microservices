@@ -34,11 +34,24 @@ public class BlendsController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Blend> createBlend(Blend blend) {
+    //TODO: availabilityCheck does not work yet! -> findByNameContaining() implementation!
+    @GetMapping("/availabilityCheck")
+    public ResponseEntity<Boolean> checkIfBlendAvailable(@RequestBody String name) {
         try {
-            Blend _bend = blendsRepository.save(new Blend(blend.getName(), blend.getId(), blend.getDescription()));
-            return new ResponseEntity<>(_bend, HttpStatus.CREATED);
+            //TODO: AvailabilityCheck sinnvoller machen! Wär blöd bei verallgemeinerten sorten, deren name in spezialsorten enthalten ist.
+            boolean isAvailable = !blendsRepository.findByNameContaining(name).isEmpty(); //momentan reicht es, wenn irgendein tee so heißt, egal ob mehrere zur Auswahl stehen
+            System.out.println("name: "+ name + ", available: " + isAvailable);
+            return new ResponseEntity<>(isAvailable, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Blend> createBlend(@RequestBody Blend blend) {
+        try {
+            Blend _blend = blendsRepository.save(new Blend(blend.getName(), blend.getId(), blend.getDescription()));
+            return new ResponseEntity<>(_blend, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
