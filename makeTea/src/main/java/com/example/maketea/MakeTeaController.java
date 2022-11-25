@@ -24,7 +24,7 @@ public class MakeTeaController {
                 return new ResponseEntity<>("Here is your cup of " + nameOfTea + ". Enjoy!", HttpStatus.OK);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
