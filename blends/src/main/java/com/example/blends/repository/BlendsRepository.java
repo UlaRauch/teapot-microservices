@@ -6,5 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface BlendsRepository extends MongoRepository<Blend, String> {
-    boolean existsBlendByName(String id);
+    boolean existsBlendByName(String name);
+    boolean existsBlendById(String id);
+    Blend findBlendById(String id);
 }

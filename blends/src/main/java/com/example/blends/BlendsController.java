@@ -25,6 +25,7 @@ public class BlendsController {
             List<Blend> blends = new ArrayList<Blend>(blendsRepository.findAll());
 
             if (blends.isEmpty()) {
+                System.out.println("success");
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
@@ -34,15 +35,13 @@ public class BlendsController {
         }
     }
 
-    //TODO: availabilityCheck does not work yet! -> findByNameContaining() implementation!
     @GetMapping("/availabilityCheck")
-    public ResponseEntity<Boolean> checkIfBlendAvailable(@RequestBody String name) {
+    public ResponseEntity<String> checkIfBlendAvailable(@RequestBody String id) {
         try {
-            //TODO: AvailabilityCheck sinnvoller machen! Wär blöd bei verallgemeinerten sorten, deren name in spezialsorten enthalten ist.
-            boolean isAvailable = blendsRepository.existsBlendByName(name); //momentan reicht es, wenn irgendein tee so heißt, egal ob mehrere zur Auswahl stehen
-            //System.out.println("name: "+ name + ", available: " + isAvailable);
-            //System.out.println(blendsRepository.findAll());
-            return new ResponseEntity<>(isAvailable, HttpStatus.OK);
+            //TODO: better solution for id not found?
+            if (blendsRepository.existsBlendById(id)) {
+                return new ResponseEntity<>(blendsRepository.findBlendById(id).getName(), HttpStatus.OK);
+            } else return new ResponseEntity<>("not found", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
