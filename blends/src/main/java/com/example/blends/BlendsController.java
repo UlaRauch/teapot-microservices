@@ -35,8 +35,9 @@ public class BlendsController {
         }
     }
 
-    @GetMapping("/availabilityCheck")
-    public ResponseEntity<String> checkIfBlendAvailable(@RequestBody String id) {
+    @GetMapping("/availabilityCheck/{blendID}")
+    public ResponseEntity<String> checkIfBlendAvailable(@PathVariable("blendID") String id) {
+        System.out.println("got request");
         try {
             //TODO: better solution for id not found?
             if (blendsRepository.existsBlendById(id)) {
