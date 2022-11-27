@@ -2,6 +2,7 @@ package com.example.maketea;
 
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ import java.util.Optional;
 @RequestMapping("/maketeaapi")
 public class MakeTeaController {
 
+    @Autowired
+    private WebClient.Builder webClientBuilder;
+
     @GetMapping
     public ResponseEntity<String> makeTea(@RequestBody String blendId) {
     //public ResponseEntity<String> makeTea(@RequestBody String nameOfTea) {
@@ -24,7 +28,17 @@ public class MakeTeaController {
             if (blendId.isEmpty() || blendId.isBlank()) {
                 return new ResponseEntity<>("Boring hot water.", HttpStatus.OK);
             } else {
-                //TODO: call blends service and ask if blend is actually available
+                //TODO: fix this mess. Problem with request, not response, request doesn't even arrive.
+
+                String nameOfTea = webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8080/blendsapi/availabilitycheck")//TODO: call correct path for availabilitycheck
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .block();
+
+                System.out.println(nameOfTea);
+                /*
                 //https://www.baeldung.com/spring-5-webclient
                 WebClient client = WebClient.create("http://localhost:8080");
                 WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = client.method(HttpMethod.GET);
@@ -35,7 +49,9 @@ public class MakeTeaController {
                         error -> error.printStackTrace(),
                         () -> System.out.println("completed without a value"));
                 //System.out.println("response: " + response);
-                String nameOfTea = "Tea Placeholder";
+
+                 */
+                //String nameOfTea = "Tea Placeholder";
                 return new ResponseEntity<>("Here is your cup of " + nameOfTea + ". Enjoy!", HttpStatus.OK);
             }
         } catch (Exception e) {
