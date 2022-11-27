@@ -41,6 +41,17 @@ public class MakeTeaController {
                 System.out.println("webclient build.");
                 System.out.println(nameOfTea);
                 /*
+                //TODO: fix this mess. Problem with request, not response, request doesn't even arrive.
+
+                String nameOfTea = webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8080/blendsapi/availabilitycheck")//TODO: call correct path for availabilitycheck
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .block();
+
+                System.out.println(nameOfTea);
+                /*
                 //https://www.baeldung.com/spring-5-webclient
                 WebClient client = WebClient.create("http://localhost:8080");
                 WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = client.method(HttpMethod.GET);
