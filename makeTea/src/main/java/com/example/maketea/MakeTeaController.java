@@ -25,6 +25,16 @@ public class MakeTeaController {
                 return new ResponseEntity<>("Boring hot water.", HttpStatus.OK);
             } else {
                 //TODO: call blends service and ask if blend is actually available
+                //https://www.baeldung.com/spring-5-webclient
+                WebClient client = WebClient.create("http://localhost:8080");
+                WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = client.method(HttpMethod.GET);
+                WebClient.RequestBodySpec bodySpec = uriSpec.uri("/blendsapi/availabilitycheck");
+                WebClient.RequestHeadersSpec<?> headersSpec = bodySpec.bodyValue(blendId);
+                Mono<String> monoResponse = headersSpec.retrieve().bodyToMono(String.class);
+                monoResponse.subscribe(value -> System.out.println(value),
+                        error -> error.printStackTrace(),
+                        () -> System.out.println("completed without a value"));
+                //System.out.println("response: " + response);
                 String nameOfTea = "Tea Placeholder";
                 return new ResponseEntity<>("Here is your cup of " + nameOfTea + ". Enjoy!", HttpStatus.OK);
             }
